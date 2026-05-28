@@ -1,61 +1,54 @@
-# KinetiX-LDS : Latent Dynamics Sensor for LLM Regime Transitions
+# KinetiX-LDS: Latent Dynamics Sensor for LLM Regime Transitions
 
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE)
-![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)
-![CUDA Supported](https://img.shields.io/badge/CUDA-Supported-green.svg)
-![Status: Experimental](https://img.shields.io/badge/Status-Experimental-orange.svg)
+KinetiX-LDS is an ultra-low latency (sub-100 µs) hardware-level state sensor designed to monitor representational regime transitions within the intermediate layers of Large Language Models (LLMs). It enables high-fidelity, real-time dynamic routing between lightweight edge models and premium cloud-based APIs.
 
-**KinetiX-LDS** est un capteur d'état matériel à ultra-basse latence (sub-100 µs) qui surveille en temps réel les transitions de régime de représentation au sein des couches intermédiaires d'un LLM afin d'aiguiller dynamiquement les requêtes entre des modèles locaux légers (Edge) et des API propriétaires haut de gamme (Cloud).
+## ⚡ Key Metrics & ROI
+
+* **77% Cloud Cost Reduction:** Instantly cuts inference operational costs by absorbing nominal conversational traffic locally and escalating only structurally complex queries to the Cloud.
+* **8.4 µs Evaluation Overhead:** Asynchronous processing via binarized Hyperdimensional Computing (HDC) hooks. This bypasses the heavy vocabulary-wide token entropy calculations (Shannon entropy) which penalize execution by up to 19 ms per token.
+* **3-Line Integration:** Seamlessly attaches to any existing transformer architecture (Llama, Qwen, SmolLM) without requiring retraining or fine-tuning.
 
 ---
 
-### ⚡ Chiffres Clés & ROI (Lecture 30 secondes)
-
-*   **77 % d'Économie Cloud** : Réduction immédiate des coûts d'inférence en absorbant le trafic nominal sur site et en n'escaladant que les requêtes complexes vers le Cloud.
-*   **8.4 µs d'Overhead** : Évaluation asynchrone ultra-rapide via des hooks C++ binarisés (HDC), évitant le calcul coûteux d'une entropie finale sur vocabulaire (Shannon) qui pénalise de près de 19 ms par token.
-*   **Intégration en 3 Lignes de Code** : Se connecte sur n'importe quel LLM existant (Llama, Qwen, SmolLM) sans réentraînement, ni fine-tuning.
-
-
-
-### 🛠️ Intégration Technique (Concrètement)
+## 🛠️ Technical Integration
 
 ```python
-from kinetix import KinetiXStreamMonitor
+from kinetix_core import KinetiXStreamMonitor
 
-# 1. Instancier le moniteur à double échelle de temps
+# 1. Instantiate the dual-timescale geometric monitor
 monitor = KinetiXStreamMonitor(dim_size=2048, alpha=0.20, beta=0.85, threshold=0.132)
 
-# 2. Enregistrer le hook PyTorch sur une couche médiane du LLM local (ex: couche 12 de Qwen)
+# 2. Register the forward hook on a mid-layer of your local LLM (e.g., Qwen Layer 12)
 model.model.layers[12].register_forward_hook(monitor.pytorch_hook)
 
-# 3. Intercepter le drift (8.4 µs en C++) et escalader vers le Cloud si Drift > Seuil
+# 3. Intercept representational displacement and route to cloud if Drift > Threshold
 ```
 
----
+🛑 What KinetiX-LDS Is NOT
 
-## 🛑 Ce que KinetiX-LDS ne fait PAS
-Pour prévenir tout malentendu sur ce projet de recherche en interprétabilité des représentations :
-*   Il **ne comprend pas** la sémantique et **ne remplace pas** les guardrails de sécurité morale/éthique.
-*   Il **ne détecte pas** l'intention malveillante de manière isolée (les intentions inoffensives complexes comme du code Python légitime et les attaques par suffixe GCG provoquent une déformation similaire de l'espace latent).
-*   Il **mesure strictement** la transition vers un régime à haute contrainte syntaxique ou structurelle.
+To prevent any misunderstanding regarding this mechanistic interpretability research:
+* It does not understand semantics: It does not replace moral or ethical safety guardrails.
+* It does not isolate malicious intent: High-constraint benign structures (such as legitimate Python code) and structural adversarial optimization (e.g., GCG suffix attacks) cause identical geometric warps in the latent space.
+* It strictly measures structural complexity: It detects the transition of the generation into a high-constraint syntax or structural regime.
 
-## 📉 Constats Négatifs & Rigueur Scientifique
-Nos tests d'isolation rigoureux (N=400) ont mis en évidence que :
-*   L'intention malveillante (ex: jailbreak) et la syntaxe complexe bénigne (ex: JSON imbriqué, LaTeX, code) sont **indiscernables** géométriquement dans les couches cachées.
-*   La dérive détectée par KinetiX-LDS est donc de nature **structurelle** (OOD / transition de régime) et non morale.
+📉 Empirical Observations & Limitations
 
-## ⚠️ Limites Connues
-*   **Calibrage dépendant de l'architecture** : Les seuils de drift doivent être calibrés individuellement pour chaque modèle.
-*   **Binarisation HDC** : La projection Charikar (SimHash) binarisée troque une légère précision géométrique contre une vitesse d'évaluation sub-microseconde.
+Our rigorous isolation tests ($N=400$) have shown that:
+* Malicious intent (e.g., jailbreaks) and complex benign syntax (e.g., nested JSON, LaTeX, code) are geometrically indistinguishable in the hidden layers. The detected drift is therefore structural (OOD / regime transition), not moral.
+* Architecture-Dependent Calibration: Drift thresholds must be calibrated individually for each model.
+* HDC Binarization: The binarized Charikar (SimHash) projection trades a slight geometric precision for sub-microsecond evaluation speed.
 
-## 📂 Structure du Dépôt
-*   `kinetix_core.py` : Le SDK unifié (Router MLOps + Stream Monitor).
-*   `kinetix_production_stress.py` : Script de stress test standard local et évaluation de flux.
-*   `LICENSE` : Licence AGPLv3.
-*   `README.md` : Ce fichier de présentation.
+📂 Repository Structure
 
-## 📄 Licence & Citation
-Ce projet est distribué sous licence **GNU Affero General Public License v3 (AGPLv3)**.
+* `kinetix_core.py`: The unified SDK (MLOps Router + Stream Monitor).
+* `kinetix_production_stress.py`: Standard local stress test script and stream evaluation.
+* `LICENSE`: AGPLv3 License.
+* `README.md`: This presentation file.
+
+📄 License & Citation
+
+This project is licensed under the GNU Affero General Public License v3 (AGPLv3).
+
 ```bibtex
 @misc{kinetix2026,
   title={KinetiX-LDS: Representational Regime Transition Detection in LLM Latent Space},
