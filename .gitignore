@@ -1,0 +1,13 @@
+# Sécurité absolue KinetiX
+archive_experimental_cpp/
+docs/
+paper/
+src/
+*.cl
+*.cpp
+*.h
+*.pdf
+*.tex
+*.png
+*eval.py
+*patching.py
